@@ -17,7 +17,7 @@ void print_statistics(double, int, double, double);
 int main()
 {
   int i, quantity = 20;
-  double number, running_sum, largest_number, smallest_number;
+  double number = 0, running_sum = 0, largest_number = 0, smallest_number = 0;
 
   print_greeting(quantity);
 
