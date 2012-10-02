@@ -35,6 +35,9 @@ void main()
   printf(".\n");
 }
 
+/**
+ * Checks the given input against the ASCII codes for 0 through 9.
+ */
 bool is_valid_number(int number)
 {
   return (number >= 48 && number <= 57);
