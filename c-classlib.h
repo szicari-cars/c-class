@@ -23,7 +23,7 @@ int get_digit(int *input_number)
         num_digits += 1;
     }
 
-    // We still have a valid number, but it's in the 10's place.
+    // We still have a valid number, but it's in the 1's place.
     if (num_digits == 0)
     {
         digit = *input_number;

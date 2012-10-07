@@ -3,7 +3,7 @@
 
 int main() 
 {
-    int num = 0, input_number = 202;
+    int num = 0, input_number = 2002;
     printf("Welcome, sucka.\n");
 
     while (num = get_digit(&input_number))

@@ -12,8 +12,6 @@ int main()
 
     srand(time(NULL));
 
-    // Initializes by reference, because you can't return an array from a
-    // function in C.
     initialize_results_array(results);
 
     for (i = 0; i < 1000; i += 1)
