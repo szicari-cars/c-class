@@ -19,8 +19,7 @@ int main()
         die_roll = rand() % DIE_SIZE;
 
         // Remember each number that was rolled by incrementing that value in
-        // an array. This takes the place of having to do multiple IF state-
-        // ments, one for each possible value of the die.
+        // an array. This takes the place of having to do multiple IF statements.
         if (die_roll < DIE_SIZE) results[die_roll] += 1;
         else bad_rolls += 1;
     }
