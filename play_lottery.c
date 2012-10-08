@@ -64,6 +64,7 @@ void show_greeting()
   printf("Welcome to the lottery!\n\n");
   printf("Enter a two-digit number to win big money.\n");
   printf("PRIZES:\nExact match:\t\t$10,000\nMatch both digits:\t$ 3,000\nMatch one digit:\t$ 1,000\n\n");
+  printf("Please note that only the first two digits will be accepted.\n");
 }
 
 /**
