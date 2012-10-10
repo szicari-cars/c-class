@@ -91,7 +91,7 @@ int determine_prize(int entered_number, int lottery_number)
 
     // They guessed at least one number in any order
     else if ((guess1 - lotto1 == 0) || (guess2 - lotto2 == 0) ||
-        (guess1 - lotto2 == 0) || (guess2 - lotto1 == 0))
+             (guess1 - lotto2 == 0) || (guess2 - lotto1 == 0))
         prize = SMALL_PRIZE;
 
     return prize;
