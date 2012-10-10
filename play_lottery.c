@@ -108,6 +108,6 @@ void print_lottery_results(int prize)
     if (prize == GRAND_PRIZE) printf("Congratulations!! You won $10,000!\n");
     if (prize == BIG_PRIZE) printf("Really good! You won $3,000!\n");
     if (prize == SMALL_PRIZE) printf("Not bad! You won $1,000!\n");
-    else if (prize == NO_PRIZE) printf("Wow, you suck. You won NOTHING.\n");
+    if (prize == NO_PRIZE) printf("Wow, you suck. You won NOTHING.\n");
 }
 
