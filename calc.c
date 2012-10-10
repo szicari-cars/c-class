@@ -1,62 +1,57 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-bool parse_input(char *);
-bool do_input(char *input);
+bool process_input(char input, double *result);
+void clear_buffer();
 
 int main()
 {
+    bool keep_calculating = true;
     double result = 0.0;
-    char *input;
-    bool stop_calculating = false;
 
     printf("Calculator is on.\n");
 
-    while (stop_calculating == false)
+    while (keep_calculating)
     {
-        printf("Please enter your input: ");
-        scanf("%s", input);
-        stop_calculating = parse_input(input);
+        printf("Please enter your input (%.2f): ", result);
+        keep_calculating = process_input(getchar(), &result);
     }
 }
 
-bool do_input(char *input)
+bool process_input(char input, double *result)
 {
-    bool stop_calculating = false;
+    bool keep_calculating = true;
 
-    printf("\n");
+    switch (input)
+    {
+        case 'h':
+        case 'H':
+            printf("Help goes here.\n");
+            break;
 
-    //switch (input)
-    //{
-    //    case 'h':
-    //    case 'H':
-    //        printf("Help goes here.\n");
-    //        break;
+        case 'r':
+        case 'R':
+            printf("End result: %.2f\nClearing result...\n", *result);
+            *result = 0.0;
+            break;
 
-    //    case 'r':
-    //    case 'R':
-    //        printf("Result is shown and the calculation cleared.\n");
-    //        break;
+        case 'q':
+        case 'Q':
+            keep_calculating = false;
+            break;
 
-    //    case 'q':
-    //    case 'Q':
-    //        stop_calculating = true;
-    //        break;
+        case '\n':
+            break;
 
-    //    default:
-    //        printf("UnknownOperatorException is thrown.\n");
-    //}
+        default:
+            printf("UnknownOperatorException is thrown.\n");
+    }
 
-    return stop_calculating;
+    return keep_calculating;
 }
 
-/**
- * Scan the input string for commands to perform.
- */
-bool parse_input(char *input)
+void clear_buffer()
 {
-    char command;
-    double input_number;
-    printf(input);
+    while (getchar() != '\n');
 }
 
