@@ -10,26 +10,26 @@ double calculate_interest_percent(double);
  */
 int main()
 {
-  double interest_rate, principle, monthly_payment;
-  int loan_term;
+    double interest_rate, principle, monthly_payment;
+    int loan_term;
 
-  display_greeting();
+    display_greeting();
 
-  // Collect the loan details.
-  printf("Please enter the interest rate on the loan: ");
-  scanf("%lf", &interest_rate);
+    // Collect the loan details.
+    printf("Please enter the interest rate on the loan: ");
+    scanf("%lf", &interest_rate);
 
-  printf("Please enter the loan term (in years): ");
-  scanf("%d", &loan_term);
+    printf("Please enter the loan term (in years): ");
+    scanf("%d", &loan_term);
 
-  printf("Please enter the amount you borrowed: ");
-  scanf("%lf", &principle);
+    printf("Please enter the amount you borrowed: ");
+    scanf("%lf", &principle);
 
-  // Now, calculate the monthly payment.
-  monthly_payment = calculate_monthly_payment(principle, interest_rate, loan_term);
-  printf("\nCongratulations! You're giving your life away for $%.2lf/month!\n", monthly_payment);
+    // Now, calculate the monthly payment.
+    monthly_payment = calculate_monthly_payment(principle, interest_rate, loan_term);
+    printf("\nCongratulations! You're giving your life away for $%.2lf/month!\n", monthly_payment);
 
-  return 0;
+    return 0;
 }
 
 /**
@@ -37,10 +37,10 @@ int main()
  */
 double calculate_monthly_payment(double principle, double interest_rate, int loan_term)
 {
-  int months = get_months_from_years(loan_term);
-  double percent_interest = calculate_interest_percent(interest_rate);
+    int months = get_months_from_years(loan_term);
+    double percent_interest = calculate_interest_percent(interest_rate);
 
-  return percent_interest + (percent_interest / pow(1 + percent_interest, months - 1)) * principle;
+    return (percent_interest + percent_interest / pow(1 + percent_interest, months - 1)) * principle;
 }
 
 /**
@@ -49,12 +49,12 @@ double calculate_monthly_payment(double principle, double interest_rate, int loa
  */
 double calculate_interest_percent(double interest_rate)
 {
-  return interest_rate / 1200.0;
+    return interest_rate / 1200.0;
 }
 
 int get_months_from_years(int years)
 {
-  return years * 12;
+    return years * 12;
 }
 
 /**
@@ -63,6 +63,6 @@ int get_months_from_years(int years)
  */
 void display_greeting()
 {
-  printf("Welcome! Please answer a few questions so I can calculate your monthly payment.\n");
+    printf("Welcome! Please answer a few questions so I can calculate your monthly payment.\n");
 }
 
