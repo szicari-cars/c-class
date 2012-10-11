@@ -83,7 +83,7 @@ bool process_input(char input, double *result)
             printf("'%c' is an unknown operation.\n", input);
     }
 
-    if (clear_buffer) clear_input_buffer();
+    clear_input_buffer();
 
     return keep_calculating;
 }
