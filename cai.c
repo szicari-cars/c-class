@@ -35,9 +35,12 @@ void generate_operands(int *operand1, int *operand2)
     *operand2 = generate_operand();
 }
 
+/**
+ * Generates a random number between 0 and 9.
+ */
 int generate_operand()
 {
-    return (rand() % 10) + 1;
+    return (rand() % 10);
 }
 
 void show_instructions()
