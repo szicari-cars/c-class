@@ -21,6 +21,8 @@ int main()
         printf("Please enter your input (%.2f): ", result);
     }
     while (process_input(getchar(), &result));
+
+    printf("Calculator is off.\n");
 }
 
 void show_help_text()
@@ -101,6 +103,9 @@ double do_calculation(double result, double operand, char operation)
     return result;
 }
 
+/**
+ * Only get the number if we are requesting a math operation.
+ */
 double get_number_from_buffer()
 {
     double input = 0.0;
