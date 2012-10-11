@@ -30,7 +30,7 @@ void show_help_text()
     printf("------------\n");
     printf("h -- This help text\n");
     printf("r -- get current result and clear calculator\n");
-    printf("q -- quit calculator");
+    printf("q -- quit calculator\n");
     printf("+num -- Add num to current result\n");
     printf("-num -- subtract num from current result\n");
     printf("/num -- divide current result by num\n");
@@ -70,8 +70,6 @@ bool process_input(char input, double *result)
             operand = get_number_from_buffer();
             *result = do_calculation(*result, operand, input);
             printf("result %c %.2f = %.2f.\n", input, operand, *result);
-            // The buffer is cleared as a side effect of fetching the number
-            clear_buffer = false;
             break;
 
         case 'q':
@@ -105,16 +103,8 @@ double do_calculation(double result, double operand, char operation)
 
 double get_number_from_buffer()
 {
-    int digit = 0;
-    double num = 0.0;
-    char ch;
-
-    while ((ch = getchar()) != '\n' && ch != EOF)
-    {
-        digit = ch - '0';
-        num = (num * 10) + digit;
-    }
-
-    return num;
+    double input = 0.0;
+    scanf("%lf", &input);
+    return input;
 }
 
