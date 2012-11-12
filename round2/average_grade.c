@@ -3,37 +3,76 @@
 #include <stdbool.h>
 #include <string.h>
 
-int get_number_of_students();
-void clear_input_buffer();
-void get_student_data(int);
-
 struct student {
-    char *name;
-    float test_grades[];
+    char name[50];
+    float *test_grades;
 };
+
+int get_number_of_students();
+void clear_buffer(FILE *buffer);
+void remove_line_ending(char *str);
+void get_student_data(int num_students, struct student *students);
+void get_student_name(struct student *a_student, int student_num);
+void get_student_grades(struct student *a_student, int student_num);
 
 int main()
 {
     int num_students = get_number_of_students();
+    struct student *students;
 
-    if (num_students > 0)
-    {
-        get_student_data(num_students);
-    }
+    if (num_students > 0) get_student_data(num_students, students);
 
     return 0;
 }
 
-void get_student_data(int num_students)
+void get_student_data(int num_students, struct student *students)
 {
     int i = 0;
-    char name[300];
+
+    students = (struct student *)malloc(num_students * sizeof(struct student));
 
     for (i = 0; i < num_students; i++)
     {
-        printf("Enter name of student %d: ", i+1);
-        fgets(name, sizeof(name), stdin);
-        printf("\nName is %s.\n", name);
+        get_student_name(&students[i], i+1);
+        get_student_grades(&students[i], i+1);
+    }
+}
+
+void get_student_name(struct student *a_student, int student_num)
+{
+    char name[50];
+
+    printf("Enter name of student %d: ", student_num);
+    fgets(name, sizeof(name), stdin);
+    remove_line_ending(name);
+    strcpy(a_student->name, name);
+}
+
+void get_student_grades(struct student *a_student, int student_num)
+{
+    int num_grades = 0, i = 0;
+    double grade = 0.0;
+
+    do
+    {
+        printf("Enter number of tests %s has taken: ", a_student->name);
+        // TODO: Resume here
+    }
+    while (!num_grades);
+
+    // Allocate enough memory for the array of floats
+    a_student->test_grades = (float*)malloc(num_grades * sizeof(float));
+
+    for (i = 0; i < num_grades; i++)
+    {
+        do
+        {
+            printf("Enter grade for test %d: ", i+1);
+            clear_buffer(stdin);
+        }
+        while (!scanf("%lf", &grade));
+
+        a_student->test_grades[i] = grade;
     }
 }
 
@@ -48,11 +87,20 @@ int get_number_of_students()
         attempt += 1;
     }
 
+    clear_buffer(stdin);
+
     return num_students;
 }
 
-void clear_input_buffer()
+void clear_buffer(FILE *buffer)
 {
     while (getchar() != '\n');
+}
+
+void remove_line_ending(char *str)
+{
+    char *line_ending = strchr(str, '\n');
+
+    if (line_ending != NULL) *line_ending = '\0';
 }
 
