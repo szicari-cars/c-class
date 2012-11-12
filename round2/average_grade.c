@@ -9,9 +9,11 @@ struct student {
     float *test_grades;
 };
 
+double compute_test_averages(struct student a_student);
 int get_number_of_students();
 void clear_buffer(FILE *buffer);
 void print_buffer(FILE *buffer);
+void print_student_statistics(struct student a_student);
 void remove_line_ending(char *str);
 void get_student_data(int num_students, struct student *students);
 void get_student_name(struct student *a_student, int student_num);
@@ -37,7 +39,42 @@ void get_student_data(int num_students, struct student *students)
     {
         get_student_name(&students[i], i+1);
         students[i].num_test_grades = get_student_grades(&students[i], i+1);
+        print_student_statistics(students[i]);
     }
+}
+
+void print_student_statistics(struct student a_student)
+{
+    printf("\n");
+    printf("%18s: %s\n", "Name", a_student.name);
+    printf("%18s: %d\n", "Number of tests", a_student.num_test_grades);
+    // TODO: Calculate average, print out average and letter grade
+    printf("\n");
+}
+
+double compute_test_averages(struct student a_student)
+{
+    int i = 0;
+    double sum_tests = 0.0;
+
+    for (i = 0; i < a_student.num_test_grades; i++)
+    {
+        sum_tests += a_student.test_grades[i];
+    }
+
+    return sum_tests / a_student.num_test_grades;
+}
+
+char get_letter_grade(double test_average)
+{
+    char letter_grade = 'F';
+
+    if (test_average >= 90) letter_grade = 'A';
+    if (test_average >= 80) letter_grade = 'B';
+    if (test_average >= 70) letter_grade = 'C';
+    if (test_average >= 65) letter_grade = 'D';
+
+    return letter_grade;
 }
 
 void get_student_name(struct student *a_student, int student_num)
