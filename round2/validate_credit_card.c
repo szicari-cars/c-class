@@ -148,13 +148,13 @@ int double_2nd_digits(char *cc_number)
         doubled_digit = (cc_number[i] - '0') * 2;
         digit = doubled_digit % 10;
 
-        if (DEBUG) printf("%c: Even digit (1's place): %d.\n", cc_number[i], digit);
-
         if (doubled_digit > 9)
         {
             if (DEBUG) printf("   Even digit (10's place): %d.\n", doubled_digit / 10);
             digit += doubled_digit / 10;
         }
+
+        if (DEBUG) printf("%c: Even digit (1's place): %d.\n", cc_number[i], digit);
 
         sum += digit;
     }
