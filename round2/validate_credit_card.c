@@ -7,13 +7,17 @@ void validate_cli_args(int argc, char *argv[]);
 bool validate_cc_length(char *cc_number);
 bool validate_cc_type(char *cc_number);
 bool validate_cc_luhn_check(char *cc_number);
+bool validate_cc_digits(char *cc_number);
 int double_2nd_digits(char *cc_number);
 int add_odd_digits(char * cc_number);
 
-int main(int argc, char *argv[])
+bool DEBUG = false;
+
+void main(int argc, char *argv[])
 {
     validate_cli_args(argc, argv);
 
+    // TODO: Refactor using function pointers. It'll be fun!
     if (!validate_cc_length(argv[1]))
     {
         printf("The credit card number is not the right length.\n");
@@ -26,11 +30,31 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    validate_cc_luhn_check(argv[1]);
+    if (!validate_cc_digits(argv[1]))
+    {
+        printf("The credit card number has invalid characters in it.\n");
+        exit(1);
+    }
+
+    if (!validate_cc_luhn_check(argv[1]))
+    {
+        printf("The credit card number is not valid.\n");
+        exit(1);
+    }
+
+    printf("The credit card number is valid!\n");
+    exit(0);
 }
 
+/**
+ * Ensures that one argument is passed on the command line.
+ *
+ * @return Boolean True if one argument is found, false otherwise.
+ */
 void validate_cli_args(int argc, char *argv[])
 {
+    if (argc == 3 && strcmp(argv[2], "debug") == 0) DEBUG = true;
+
     if (argc < 2)
     {
         printf("Please enter a credit card number.\n");
@@ -38,6 +62,11 @@ void validate_cli_args(int argc, char *argv[])
     }
 }
 
+/**
+ * Checks that the credit card number's length is between 13 and 16 characters.
+ *
+ * @return Boolean True if so, false otherwise.
+ */
 bool validate_cc_length(char *cc_number)
 {
     int cc_num_length = strlen(cc_number);
@@ -48,6 +77,19 @@ bool validate_cc_length(char *cc_number)
     return valid;
 }
 
+/**
+ * Validates that the credit card is of a valid type. Valid types are deter-
+ * mined by checking the first (and in one case, first and second) character
+ * for certain numbers.
+ *
+ * Valid Types:
+ *      /^4/    Visa card
+ *      /^5/    Mastercard
+ *      /^6/    Discover card
+ *      /^37/   American Express card
+ *
+ * @return Boolean True if a valid type is found, false otherwise.
+ */
 bool validate_cc_type(char *cc_number)
 {
     bool valid_type = false;
@@ -59,13 +101,38 @@ bool validate_cc_type(char *cc_number)
     return valid_type;
 }
 
+/**
+ * Iterates over the given string and verifies that every character is an
+ * integer.
+ *
+ * @return Boolean False if a non-numeric character is detected. True otherwise.
+ */
+bool validate_cc_digits(char *cc_number)
+{
+    int i = 0;
+
+    for (i = 0; i < strlen(cc_number); i++)
+        if (!isdigit(cc_number[i])) return false;
+
+    return true;
+}
+
+/**
+ * Performs various mathematical checks on the numbers. Any failure indicates
+ * an invalid number.
+ *
+ * @see http://en.wikipedia.org/wiki/Luhn_algorithm
+ *
+ * @return Boolean True if the number passes, false otherwise.
+ */
 bool validate_cc_luhn_check(char *cc_number)
 {
     int doubled_digits = double_2nd_digits(cc_number),
-        add_odd_digits = add_odd_digits(cc_number),
+        odd_digits = add_odd_digits(cc_number),
         sum = 0;
 
     sum = doubled_digits + odd_digits;
+    if (DEBUG) printf("Sum of doubled digits: %d.\n", sum);
 
     return (sum % 10 == 0);
 }
@@ -74,20 +141,20 @@ int double_2nd_digits(char *cc_number)
 {
     int i = 0, digit, doubled_digit = 0, sum = 0;
 
-    for (i = strlen(cc_number); i < 0; i -= 2)
-    {
-        digit = cc_number[i];
-        
-        if (!isdigit(cc_number[i]))
-        {
-            printf("Invalid character detected: %c.\n", digit);
-            exit(1);
-        }
+    if (DEBUG) printf("Doubling and adding digits, right to left.\n");
 
-        doubled_digit = (digit - '0') * 2;
+    for (i = strlen(cc_number)-1; i >= 0; i -= 2)
+    {
+        doubled_digit = (cc_number[i] - '0') * 2;
         digit = doubled_digit % 10;
 
-        if (doubled_digit > 9) digit += doubled_digit / 10;
+        if (DEBUG) printf("%c: Even digit (1's place): %d.\n", cc_number[i], digit);
+
+        if (doubled_digit > 9)
+        {
+            if (DEBUG) printf("   Even digit (10's place): %d.\n", doubled_digit / 10);
+            digit += doubled_digit / 10;
+        }
 
         sum += digit;
     }
@@ -96,4 +163,6 @@ int double_2nd_digits(char *cc_number)
 }
 
 int add_odd_digits(char * cc_number)
-{}
+{
+    return 0;
+}
