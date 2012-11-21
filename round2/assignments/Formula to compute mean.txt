@@ -1,0 +1,10 @@
+Formula to compute mean:
+
+X =i=1NXiN
+
+Formula to compute standard deviation: 
+
+                                                                     
+
+                         σ=i=1N(Xi-X)2N-1
+
