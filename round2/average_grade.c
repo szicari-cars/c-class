@@ -84,10 +84,21 @@ char get_letter_grade(double test_average)
 {
     char letter_grade = 'F';
 
-    if (test_average >= 90.0) letter_grade = 'A';
-    if (test_average >= 80.0) letter_grade = 'B';
-    if (test_average >= 70.0) letter_grade = 'C';
-    if (test_average >= 65.0) letter_grade = 'D';
+    switch ((int)test_average/10)
+    {
+        case 9:
+        case 10:
+            letter_grade = 'A';
+            break;
+        case 8:
+            letter_grade = 'B';
+            break;
+        case 7:
+            letter_grade = 'C';
+            break;
+        case 6:
+            letter_grade = 'D';
+    }
 
     return letter_grade;
 }
