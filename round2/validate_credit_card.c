@@ -18,6 +18,8 @@ bool DEBUG = false;
 void main(int argc, char *argv[])
 {
     validate_cli_args(argc, argv);
+    
+    // TODO: Modify to use array of function pointers.
 
     // TODO: Refactor using function pointers. It'll be fun!
     if (!validate_cc_length(argv[1]))
