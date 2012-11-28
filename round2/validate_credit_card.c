@@ -38,7 +38,7 @@ void main(int argc, char *argv[])
 
     if (!validate_cc_luhn_check(argv[1]))
     {
-        printf("The credit card number is not valid.\n");
+        printf("The credit card number failed the Luhn check.\n");
         exit(1);
     }
 
