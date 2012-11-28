@@ -3,13 +3,15 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+typedef int (*Processor)(char);
+
 void validate_cli_args(int argc, char *argv[]);
 bool validate_cc_length(char *cc_number);
 bool validate_cc_type(char *cc_number);
 bool validate_cc_luhn_check(char *cc_number);
 bool validate_cc_digits(char *cc_number);
-int double_2nd_digits(char *cc_number);
-int add_odd_digits(char * cc_number);
+int process_even_digit(char);
+int process_odd_digit(char);
 
 bool DEBUG = false;
 
@@ -127,42 +129,46 @@ bool validate_cc_digits(char *cc_number)
  */
 bool validate_cc_luhn_check(char *cc_number)
 {
-    int doubled_digits = double_2nd_digits(cc_number),
-        odd_digits = add_odd_digits(cc_number),
-        sum = 0;
+    Processor processors[] = { &process_even_digit, &process_odd_digit };
+    int cc_num_length = strlen(cc_number), offset = 0, sum = 0, i = 0;
 
-    sum = doubled_digits + odd_digits;
+    // Iterate over the credit card number backwards
+    for (i = 1; i <= cc_num_length; i++)
+    {
+        // Either zero for even digit or one for odd digit
+        offset = ((cc_num_length - i) % 2);
+        if (DEBUG) printf("offset is %d for digit %c.\n", offset, cc_number[cc_num_length - i]);
+        sum += processors[offset](cc_number[cc_num_length - i]);
+        if (DEBUG) printf("Running sum: %d.\n", sum);
+    }
+
     if (DEBUG) printf("Sum of doubled digits: %d.\n", sum);
 
     return (sum % 10 == 0);
 }
 
-int double_2nd_digits(char *cc_number)
+int process_even_digit(char digit)
 {
-    int i = 0, digit, doubled_digit = 0, sum = 0;
+    int doubled_digit = (digit - '0') * 2,
+        number = doubled_digit % 10;
 
-    if (DEBUG) printf("Doubling and adding digits, right to left.\n");
-
-    for (i = strlen(cc_number)-1; i >= 0; i -= 2)
+    if (doubled_digit > 9)
     {
-        doubled_digit = (cc_number[i] - '0') * 2;
-        digit = doubled_digit % 10;
-
-        if (doubled_digit > 9)
-        {
-            if (DEBUG) printf("   Even digit (10's place): %d.\n", doubled_digit / 10);
-            digit += doubled_digit / 10;
-        }
-
-        if (DEBUG) printf("%c: Even digit (1's place): %d.\n", cc_number[i], digit);
-
-        sum += digit;
+        if (DEBUG) printf("   Even digit (10's place): %d.\n", doubled_digit / 10);
+        number += doubled_digit / 10;
     }
 
-    return sum;
+    if (DEBUG)
+    {
+        printf("%c: Even digit (1's place): %d.\n", digit, doubled_digit % 10);
+        printf("Total for these numbers: %d.\n", number);
+    }
+
+    return number;
 }
 
-int add_odd_digits(char * cc_number)
+int process_odd_digit(char digit)
 {
-    return 0;
+    if (DEBUG) printf("Odd digit: %d.\n", digit - '0');
+    return (digit - '0');
 }
