@@ -3,7 +3,6 @@
 #include <string.h>
 
 struct xrec * prepend_to_list(struct xrec * first, struct xrec temp);
-struct xrec * get_line(FILE * input_stream);
 void print_student_names(struct xrec * records);
 
 struct xrec
@@ -25,7 +24,7 @@ void main()
     // Basic intialization to known values
     first = NULL;
 
-    while (fscanf(infile, "%10s,%11s,%c,%lf,%lf,%lf,%lf", temp.name,
+    while (fscanf(infile, "%10s %11s %c %lf %lf %lf %lf", temp.name,
                                                           temp.ssn,
                                                           &temp.g,
                                                           &temp.h,
@@ -34,29 +33,35 @@ void main()
                                                           &temp.f) != EOF)
     {
         temp.name[10] = '\0';
+        temp.grade = 'Z';
+
         first = prepend_to_list(first, temp);
     }
 
     fclose(infile);
-}
 
-/**
- * Gets a single line from the given input stream.
- */
-struct xrec * get_line(FILE * input_stream)
-{
+    print_student_names(first);
 }
 
 void print_student_names(struct xrec * records)
 {
+    printf("\n");
+
     while (records != NULL)
     {
-        printf("%15s: %s\n", "Name", records->name);
-        printf("%15s: %s\n", "SSN", records->ssn);
-        printf("%15s: %c\n", "Gender", records->g);
-        printf("%15s: %lf\n", "H", records->h);
-        printf("%15s: %lf\n", "Q", records->q);
-        printf("%15s: %lf\n", "Q", records->q);
+        printf("%8s  Value\n", "Field");
+        printf("----------------------\n");
+
+        printf("%8s: %s\n", "Name", records->name);
+        printf("%8s: %s\n", "SSN", records->ssn);
+        printf("%8s: %c\n", "Gender", records->g);
+        printf("%8s: %5.2lf\n", "H", records->h);
+        printf("%8s: %5.2lf\n", "Q", records->q);
+        printf("%8s: %5.2lf\n", "M", records->m);
+        printf("%8s: %5.2lf\n", "F", records->f);
+        printf("%8s: %c\n", "Grade", records->grade);
+
+        printf("----------------------\n\n");
 
         // Advance to the next record
         records = records->next;
@@ -77,3 +82,4 @@ struct xrec * prepend_to_list(struct xrec * list, struct xrec temp)
 
     return new_node;
 }
+
