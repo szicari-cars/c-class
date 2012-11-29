@@ -4,12 +4,17 @@
 #include <stdbool.h>
 
 typedef int (*Processor)(char);
+typedef bool (*Validator)(char *);
 
 void validate_cli_args(int argc, char *argv[]);
+
+/* Credit card validation functions */
 bool validate_cc_length(char *cc_number);
 bool validate_cc_type(char *cc_number);
 bool validate_cc_luhn_check(char *cc_number);
 bool validate_cc_digits(char *cc_number);
+#define NUM_VALIDATION_FUNCTIONS    4
+
 int process_even_digit(char);
 int process_odd_digit(char);
 
@@ -17,35 +22,35 @@ bool DEBUG = false;
 
 void main(int argc, char *argv[])
 {
+    int i = 0;
+
     validate_cli_args(argc, argv);
+
+    Validator validators[] = { // Validate CC length
+                               &validate_cc_length,
+                               // Validate whether cc is a valid type of card (Visa, Discover...)
+                               &validate_cc_type,
+                               // Only numbers in the credit card number?
+                               &validate_cc_digits,
+                               // Does it pass the Luhn check?
+                               &validate_cc_luhn_check
+                             };
+
+    // The error message index needs to line up with the validator index in the "validators" array
+    char * error_messages[] = {"The credit card number is not the right length.",
+                               "The credit card number is not a valid type.",
+                               "The credit card number has invalid characters in it.",
+                               "The credit card number failed the Luhn check."};
+
+    for (i = 0; i < NUM_VALIDATION_FUNCTIONS; i++)
+    {
+        if (!validators[i](argv[1]))
+        {
+            printf("%s\n", error_messages[i]);
+            exit(1);
+        }
+    }
     
-    // TODO: Modify to use array of function pointers.
-
-    // TODO: Refactor using function pointers. It'll be fun!
-    if (!validate_cc_length(argv[1]))
-    {
-        printf("The credit card number is not the right length.\n");
-        exit(1);
-    }
-
-    if (!validate_cc_type(argv[1]))
-    {
-        printf("The credit card number is not a valid type.\n");
-        exit(1);
-    }
-
-    if (!validate_cc_digits(argv[1]))
-    {
-        printf("The credit card number has invalid characters in it.\n");
-        exit(1);
-    }
-
-    if (!validate_cc_luhn_check(argv[1]))
-    {
-        printf("The credit card number failed the Luhn check.\n");
-        exit(1);
-    }
-
     printf("The credit card number is valid!\n");
     exit(0);
 }
