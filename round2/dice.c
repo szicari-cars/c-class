@@ -42,11 +42,11 @@ void print_game_stats(int scores[])
 {
     printf("Final Results:\n");
     printf("--------------\n");
-    printf("%20s: %d\n", "Wins", scores[WINS_INDEX]);
-    printf("%20s: %d\n", "Losses", scores[LOSSES_INDEX]);
-    printf("%20s: %d\n", "Wins with points", scores[WINS_WP]);
-    printf("%20s: %d\n", "Losses with points", scores[LOSSES_WP]);
-    printf("---------------\n");
+    printf("%3d Wins\n", scores[WINS_INDEX]);
+    printf("%3d Losses\n", scores[LOSSES_INDEX]);
+    printf("%3d Wins with points\n", scores[WINS_WP]);
+    printf("%3d Losses with points\n", scores[LOSSES_WP]);
+    printf("--------------\n");
 }
 
 bool keep_score(int roll_sum, int scores[], int * roll_counter)
@@ -61,9 +61,10 @@ bool keep_score(int roll_sum, int scores[], int * roll_counter)
 
     else
     {
-        *roll_counter++;
+        (*roll_counter)++;
         roll_again = true;
     }
+
 
     return roll_again;
 }
