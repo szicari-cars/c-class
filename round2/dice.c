@@ -13,7 +13,7 @@
 int roll_die();
 int roll_dice();
 bool keep_score(int roll_sum, int scores[], int * roll_counter);
-void print_game_stats(int * scores);
+void print_game_stats(int scores[]);
 
 void main()
 {
