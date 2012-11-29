@@ -79,11 +79,8 @@ void validate_cli_args(int argc, char *argv[])
 bool validate_cc_length(char *cc_number)
 {
     int cc_num_length = strlen(cc_number);
-    bool valid = false;
 
-    if (cc_num_length >= 13 && cc_num_length <= 16) valid = true;
-
-    return valid;
+    return (cc_num_length >= 13 && cc_num_length <= 16);
 }
 
 /**
