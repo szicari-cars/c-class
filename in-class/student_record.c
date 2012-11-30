@@ -15,7 +15,7 @@ struct xrec
     struct xrec * next;
 };
 
-void main()
+int main()
 {
     struct xrec * first;
     struct xrec temp;
@@ -41,6 +41,8 @@ void main()
     fclose(infile);
 
     print_student_names(first);
+
+    return 0;
 }
 
 void print_student_names(struct xrec * records)
