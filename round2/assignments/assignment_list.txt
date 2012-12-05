@@ -1,0 +1,10 @@
+[x] Average Grade
+[x] Dice Problem
+[x] Project Credit Card
+[ ] dehkhoda.doc
+    [ ] Mini Statistics
+    [ ] Print Array of ints
+    [ ] Convert Array to separate ints/chars
+    [ ] File Copying Variations & Report on Performance
+[ ] EXTRA CREDIT: Maze
+[ ] EXTRA CREDIT: Add Two Very Large Numbers
