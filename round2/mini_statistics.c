@@ -6,6 +6,10 @@
 typedef int (*Processor)(float *, size_t, int);
 typedef float (*CalculatorFunction)(float *, size_t, int);
 
+/**
+ * Represents a calculation to be done on an array of numbers as well as the
+ * name of the calculation being performed. Pointers everywhere!
+ */
 typedef struct
 {
     CalculatorFunction calculate;
@@ -28,6 +32,10 @@ float calculate_mode(float data_array[], size_t array_size, int data_position);
 float calculate_variance(float data_array[], size_t array_size, int data_position);
 float calculate_standard_deviation(float data_array[], size_t array_size, int data_position);
 
+/**
+ * Asks "the user" for a menu option and then dispatches out to a handler that
+ * will respond to their input.
+ */
 void main()
 {
     int user_choice = false, data_position = 0;
@@ -50,6 +58,9 @@ void main()
     printf("Program terminated.\n");
 }
 
+/**
+ * Shows the main menu to the user.
+ */
 void display_menu()
 {
     printf("\n~~~~~~~ Main Menu ~~~~~~~\n\n");
@@ -61,6 +72,11 @@ void display_menu()
     printf("\n");
 }
 
+/**
+ * Function to get user input as safely as possible. Sets an upper limit on the
+ * number of characters that can be entered, and protects against memory over-
+ * flows.
+ */
 char * get_input()
 {
     int input_length = 100;
@@ -71,6 +87,9 @@ char * get_input()
     return unsanitized_input;
 }
 
+/**
+ * Asks for user input repeatedly until a valid number is entered.
+ */
 int get_user_choice()
 {
     int user_choice = 0;
@@ -81,6 +100,11 @@ int get_user_choice()
     return user_choice;
 }
 
+/**
+ * Uses function pointers to call handlers for the given input from the user.
+ * By this point, the input has been sanitized and is within the range of valid
+ * menu options available.
+ */
 int process_user_choice(int user_choice, float data_array[], size_t array_size, int data_position)
 {
     int i = 0;
@@ -91,6 +115,15 @@ int process_user_choice(int user_choice, float data_array[], size_t array_size, 
     return processors[user_choice](data_array, array_size, data_position);
 }
 
+/**
+ * Collects user input into the data array until the array is full or the user
+ * enters invalid input.
+ *
+ * This is slightly different from the assignment's requirement in that any
+ * invalid input will exit out of the collection loop. I like this better be-
+ * cause it means I can just press enter when I'm done entering numbers instead
+ * of having to press some special key combination.
+ */
 int collect_data(float data_array[], size_t array_size, int data_position)
 {
     int input_length = 100;
@@ -114,6 +147,12 @@ int collect_data(float data_array[], size_t array_size, int data_position)
     return data_position;
 }
 
+/**
+ * Prints out all entered numbers so far, and then prints out various statis-
+ * tics about the numbers. The statistics are calculated by way of an array of
+ * Calculator structures that include a pointer to a function to handle the
+ * calculation as well as a short, descriptive title for the calculation.
+ */
 int print_statistics(float data_array[], size_t array_size, int data_position)
 {
     int i = 0;
@@ -148,6 +187,9 @@ int print_statistics(float data_array[], size_t array_size, int data_position)
     return data_position;
 }
 
+/**
+ * Sorts a given array using a bubble sort algorithm.
+ */
 void sort_array(float data_array[], size_t array_size, int data_position)
 {
     int i = 0, j = 0;
@@ -163,16 +205,31 @@ void sort_array(float data_array[], size_t array_size, int data_position)
             }
 }
 
+/**
+ * Returns the highest number in the array.
+ *
+ * NOTE: This expects a sorted array!
+ */
 float calculate_high_number(float data_array[], size_t array_size, int data_position)
 {
     return data_array[data_position-1];
 }
 
+/**
+ * Returns the lowest number in the array.
+ *
+ * NOTE: This expects a sorted array!
+ */
 float calculate_low_number(float data_array[], size_t array_size, int data_position)
 {
     return data_array[0];
 }
 
+/**
+ * Returns the average of all the numbers in the given array.
+ *
+ * NOTE: This expects a sorted array!
+ */
 float calculate_mean(float data_array[], size_t array_size, int data_position)
 {
     int i = 0;
@@ -184,21 +241,41 @@ float calculate_mean(float data_array[], size_t array_size, int data_position)
     return mean;
 }
 
+/**
+ * Returns the middle number in the given array.
+ *
+ * NOTE: This expects a sorted array!
+ */
 float calculate_median(float data_array[], size_t array_size, int data_position)
 {
     return data_array[data_position/2];
 }
 
+/**
+ * Returns the variance of the given array.
+ *
+ * NOTE: This expects a sorted array!
+ */
 float calculate_variance(float data_array[], size_t array_size, int data_position)
 {
     return 50.0;
 }
 
+/**
+ * Returns the number that repeats the most in the given array.
+ *
+ * NOTE: This expects a sorted array!
+ */
 float calculate_mode(float data_array[], size_t array_size, int data_position)
 {
     return 50.0;
 }
 
+/**
+ * Returns the standard deviation for the numbers in the given array.
+ *
+ * NOTE: This expects a sorted array!
+ */
 float calculate_standard_deviation(float data_array[], size_t array_size, int data_position)
 {
     return 50.0;
