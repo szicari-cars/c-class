@@ -268,7 +268,31 @@ float calculate_variance(float data_array[], size_t array_size, int data_positio
  */
 float calculate_mode(float data_array[], size_t array_size, int data_position)
 {
-    return 50.0;
+    int winning_count = 0, current_count = 0, i = 0;
+    float mode = 0.0, current_mode = 0.0;
+
+    do
+    {
+        if (current_mode == data_array[i])
+            current_count++;
+
+        else
+        {
+            current_mode = data_array[i];
+            current_count = 1;
+        }
+
+        if (current_count > winning_count)
+        {
+            winning_count = current_count;
+            mode = current_mode;
+        }
+
+        i++;
+    }
+    while (i < data_position);
+    
+    return mode;
 }
 
 /**
