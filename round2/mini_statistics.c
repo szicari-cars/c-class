@@ -38,9 +38,11 @@ void main()
     {
         display_menu();
         user_choice = get_user_choice();
+
         if (user_choice < 3 && user_choice > 0)
             data_position = process_user_choice(user_choice, data_array, array_size, data_position);
-        else if (user_choice > 3)
+
+        else if (user_choice > 3 || user_choice < 0)
             printf("%d is not a valid menu option.\n", user_choice);
     }
     while (user_choice != 3);
