@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
 
 typedef int (*Processor)(float *, size_t, int);
 typedef float (*CalculatorFunction)(float *, size_t, int);
@@ -264,7 +265,7 @@ float calculate_variance(float data_array[], size_t array_size, int data_positio
     for (i = 0; i < data_position; i++)
         sum += pow(data_array[i]-mean, 2);
 
-    return sum / data_position;
+    return sum / (data_position-1);
 }
 
 /**
@@ -308,6 +309,7 @@ float calculate_mode(float data_array[], size_t array_size, int data_position)
  */
 float calculate_standard_deviation(float data_array[], size_t array_size, int data_position)
 {
-    // TODO everything
-    return 50.0;
+    float variance = calculate_variance(data_array, array_size, data_position);
+
+    return sqrt(variance);
 }
