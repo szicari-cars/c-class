@@ -258,7 +258,13 @@ float calculate_median(float data_array[], size_t array_size, int data_position)
  */
 float calculate_variance(float data_array[], size_t array_size, int data_position)
 {
-    return 50.0;
+    float mean = calculate_mean(data_array, array_size, data_position), sum = 0.0;
+    int i = 0;
+
+    for (i = 0; i < data_position; i++)
+        sum += pow(data_array[i]-mean, 2);
+
+    return sum / data_position;
 }
 
 /**
@@ -302,5 +308,6 @@ float calculate_mode(float data_array[], size_t array_size, int data_position)
  */
 float calculate_standard_deviation(float data_array[], size_t array_size, int data_position)
 {
+    // TODO everything
     return 50.0;
 }
