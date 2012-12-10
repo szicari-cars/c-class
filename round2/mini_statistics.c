@@ -17,6 +17,13 @@ typedef struct
     char * calculation_name;
 } Calculator;
 
+typedef struct _mode_object
+{
+    float * value;
+    int count;
+    struct _mode_object * next;
+} Mode_Object;
+
 void display_menu();
 int process_user_choice(int, float [], size_t, int);
 int collect_data(float [], size_t, int);
@@ -75,7 +82,7 @@ void display_menu()
 
 /**
  * Function to get user input as safely as possible. Sets an upper limit on the
- * number of characters that can be entered, and protects against memory over-
+ * number of characters that can be entered, and protects against buffer over-
  * flows.
  */
 char * get_input()
@@ -249,7 +256,14 @@ float calculate_mean(float data_array[], size_t array_size, int data_position)
  */
 float calculate_median(float data_array[], size_t array_size, int data_position)
 {
-    return data_array[data_position/2];
+    int middle_point = data_position / 2;
+
+    if (array_size % 2 == 0)
+    {
+        return (data_array[middle_point-1] + data_array[middle_point]) / 2;
+    }
+
+    return data_array[middle_point];
 }
 
 /**
@@ -276,24 +290,43 @@ float calculate_variance(float data_array[], size_t array_size, int data_positio
 float calculate_mode(float data_array[], size_t array_size, int data_position)
 {
     int winning_count = 0, current_count = 0, i = 0;
+    Mode_Object mode_object, new_mode;
     float mode = 0.0, current_mode = 0.0;
 
     do
     {
-        if (current_mode == data_array[i])
-            current_count++;
-
+        if (i == 0)
+        {
+            mode_object.value = &data_array[i];
+            mode_object.count = 1;
+        }
         else
         {
-            current_mode = data_array[i];
-            current_count = 1;
+            if (data_array[i] == *mode_object.value)
+                mode_object.count++;
+            
+            else
+            {
+                new_mode.value = &data_array[i];
+                new_mode.counter = 1;
+                mode_object.next = new_mode;
+            }
         }
 
-        if (current_count > winning_count)
-        {
-            winning_count = current_count;
-            mode = current_mode;
-        }
+        //if (current_mode == data_array[i])
+        //    current_count++;
+
+        //else
+        //{
+        //    current_mode = data_array[i];
+        //    current_count = 1;
+        //}
+
+        //if (current_count > winning_count)
+        //{
+        //    winning_count = current_count;
+        //    mode = current_mode;
+        //}
 
         i++;
     }
@@ -311,5 +344,5 @@ float calculate_standard_deviation(float data_array[], size_t array_size, int da
 {
     float variance = calculate_variance(data_array, array_size, data_position);
 
-    return sqrt(variance);
+    return pow(variance, 0.5);
 }
