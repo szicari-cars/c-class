@@ -30,6 +30,7 @@ int collect_data(float [], size_t, int);
 int print_statistics(float [], size_t, int);
 char * get_input();
 void sort_array(float data_array[], size_t array_size, int data_position);
+Mode_Object * create_mode_node(float * number, int count, Mode_Object * mode_cursor);
 
 // Calculation functions
 float calculate_high_number(float data_array[], size_t array_size, int data_position);
@@ -179,7 +180,7 @@ int print_statistics(float data_array[], size_t array_size, int data_position)
     else
     {
         printf("+--------------+\n");
-        printf("| NUMBER STATS |\n");
+        printf("|   NUMBERS    |\n");
         printf("+--------------+\n");
 
         for (i = 0; i < data_position; i++)
@@ -189,8 +190,11 @@ int print_statistics(float data_array[], size_t array_size, int data_position)
     }
 
     for (i = 0; i < (sizeof calculators / sizeof(Calculator)); i++)
-        printf("%20s: %5.2lf\n", calculators[i].calculation_name,
-                                 calculators[i].calculate(data_array, array_size, data_position));
+    {
+        printf("%20s: ", calculators[i].calculation_name);
+        calculators[i].calculate(data_array, array_size, data_position);
+        printf("\n");
+    }
 
     return data_position;
 }
@@ -220,6 +224,7 @@ void sort_array(float data_array[], size_t array_size, int data_position)
  */
 float calculate_high_number(float data_array[], size_t array_size, int data_position)
 {
+    printf("%lf", data_array[data_position-1]);
     return data_array[data_position-1];
 }
 
@@ -230,6 +235,7 @@ float calculate_high_number(float data_array[], size_t array_size, int data_posi
  */
 float calculate_low_number(float data_array[], size_t array_size, int data_position)
 {
+    printf("%lf", data_array[0]);
     return data_array[0];
 }
 
@@ -246,6 +252,7 @@ float calculate_mean(float data_array[], size_t array_size, int data_position)
     for (i = 0; i < data_position; i++) sum += data_array[i];
     mean = sum / (data_position-1);
 
+    printf("%lf", mean);
     return mean;
 }
 
@@ -257,13 +264,16 @@ float calculate_mean(float data_array[], size_t array_size, int data_position)
 float calculate_median(float data_array[], size_t array_size, int data_position)
 {
     int middle_point = data_position / 2;
+    float median = 0.0;
 
     if (array_size % 2 == 0)
-    {
-        return (data_array[middle_point-1] + data_array[middle_point]) / 2;
-    }
+        median = (data_array[middle_point-1] + data_array[middle_point]) / 2;
 
-    return data_array[middle_point];
+    else
+        median = data_array[middle_point];
+
+    printf("%lf", median);
+    return median;
 }
 
 /**
@@ -273,13 +283,16 @@ float calculate_median(float data_array[], size_t array_size, int data_position)
  */
 float calculate_variance(float data_array[], size_t array_size, int data_position)
 {
-    float mean = calculate_mean(data_array, array_size, data_position), sum = 0.0;
+    float mean = calculate_mean(data_array, array_size, data_position), sum = 0.0, variance = 0.0;
     int i = 0;
 
     for (i = 0; i < data_position; i++)
         sum += pow(data_array[i]-mean, 2);
 
-    return sum / (data_position-1);
+    variance = sum / (data_position-1);
+
+    printf("%lf", variance);
+    return variance;
 }
 
 /**
@@ -289,50 +302,74 @@ float calculate_variance(float data_array[], size_t array_size, int data_positio
  */
 float calculate_mode(float data_array[], size_t array_size, int data_position)
 {
-    int winning_count = 0, current_count = 0, i = 0;
-    Mode_Object mode_object, new_mode;
-    float mode = 0.0, current_mode = 0.0;
+    int current_count = 0, i = 0;
+    Mode_Object * mode_object_cursor = NULL,
+                * first_mode_object = NULL;
+    float current_mode = 0.0,
+          first_mode = 0.0;
 
     do
     {
+        // We are on the first iteration. Initialize variables.
         if (i == 0)
         {
-            mode_object.value = &data_array[i];
-            mode_object.count = 1;
+            current_mode = data_array[i];
+            current_count = 1;
         }
         else
         {
-            if (data_array[i] == *mode_object.value)
-                mode_object.count++;
-            
+            if (current_mode == data_array[i])
+                ++current_count;
+
             else
             {
-                new_mode.value = &data_array[i];
-                new_mode.counter = 1;
-                mode_object.next = new_mode;
+                if (current_count > 1)
+                {
+                    // We are going to keep the structs sorted as we insert them.
+                    if (first_mode_object == NULL || current_count >= first_mode_object->count)
+                    {
+                        first_mode_object = create_mode_node(&data_array[i-1], current_count,
+                                                             first_mode_object);
+                    }
+                }
+
+                current_mode = data_array[i];
+                current_count = 1;
             }
         }
-
-        //if (current_mode == data_array[i])
-        //    current_count++;
-
-        //else
-        //{
-        //    current_mode = data_array[i];
-        //    current_count = 1;
-        //}
-
-        //if (current_count > winning_count)
-        //{
-        //    winning_count = current_count;
-        //    mode = current_mode;
-        //}
 
         i++;
     }
     while (i < data_position);
-    
-    return mode;
+
+    // Print out the results. All that for just this.
+    if (first_mode_object != NULL)
+    {
+        mode_object_cursor = first_mode_object;
+        first_mode = *(mode_object_cursor->value);
+
+        do
+        {
+            printf("%lf (repeats %d times) ", mode_object_cursor->value[0],
+                                              mode_object_cursor->count);
+            mode_object_cursor = mode_object_cursor->next;
+        }
+        while (mode_object_cursor != NULL && mode_object_cursor->count == first_mode_object->count);
+    }
+    else
+        printf("None");
+
+    return first_mode;
+}
+
+Mode_Object * create_mode_node(float * number, int count, Mode_Object * mode_cursor)
+{
+    Mode_Object * new_mode = (Mode_Object *) malloc(sizeof(Mode_Object));
+    new_mode->value = number;
+    new_mode->count = count;
+    new_mode->next = mode_cursor;
+
+    return new_mode;
 }
 
 /**
@@ -342,7 +379,9 @@ float calculate_mode(float data_array[], size_t array_size, int data_position)
  */
 float calculate_standard_deviation(float data_array[], size_t array_size, int data_position)
 {
-    float variance = calculate_variance(data_array, array_size, data_position);
+    float variance = calculate_variance(data_array, array_size, data_position),
+          standard_deviation = pow(variance, 0.5);
 
-    return pow(variance, 0.5);
+    printf("%lf", standard_deviation);
+    return standard_deviation;
 }
