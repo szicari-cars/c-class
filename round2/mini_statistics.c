@@ -24,11 +24,12 @@ typedef struct _mode_object
     struct _mode_object * next;
 } Mode_Object;
 
-void display_menu();
+void display_menu(void);
 int process_user_choice(int, float [], size_t, int);
 int collect_data(float [], size_t, int);
 int print_statistics(float [], size_t, int);
-char * get_input();
+int get_user_choice(void);
+char * get_input(void);
 void sort_array(float data_array[], size_t array_size, int data_position);
 Mode_Object * create_mode_node(float * number, int count, Mode_Object * mode_cursor);
 
