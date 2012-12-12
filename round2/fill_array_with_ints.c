@@ -12,6 +12,7 @@ int main()
     size_t array_size = sizeof array / sizeof(array[0]);
 
     srand(time(NULL));
+
     fill_array_with_ints(array, array_size);
     print_array_with_ints(array, array_size);
 }
