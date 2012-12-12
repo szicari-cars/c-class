@@ -5,7 +5,7 @@
 #include <math.h>
 
 typedef int (*Processor)(float *, size_t, int);
-typedef float (*CalculatorFunction)(float *, size_t, int);
+typedef float (*CalculatorFunction)(float *, size_t, int, bool);
 
 /**
  * Represents a calculation to be done on an array of numbers as well as the
@@ -33,13 +33,13 @@ void sort_array(float data_array[], size_t array_size, int data_position);
 Mode_Object * create_mode_node(float * number, int count, Mode_Object * mode_cursor);
 
 // Calculation functions
-float calculate_high_number(float data_array[], size_t array_size, int data_position);
-float calculate_low_number(float data_array[], size_t array_size, int data_position);
-float calculate_mean(float data_array[], size_t array_size, int data_position);
-float calculate_median(float data_array[], size_t array_size, int data_position);
-float calculate_mode(float data_array[], size_t array_size, int data_position);
-float calculate_variance(float data_array[], size_t array_size, int data_position);
-float calculate_standard_deviation(float data_array[], size_t array_size, int data_position);
+float calculate_high_number(float data_array[], size_t array_size, int data_position, bool print_value);
+float calculate_low_number(float data_array[], size_t array_size, int data_position, bool print_value);
+float calculate_mean(float data_array[], size_t array_size, int data_position, bool print_value);
+float calculate_median(float data_array[], size_t array_size, int data_position, bool print_value);
+float calculate_mode(float data_array[], size_t array_size, int data_position, bool print_value);
+float calculate_variance(float data_array[], size_t array_size, int data_position, bool print_value);
+float calculate_standard_deviation(float data_array[], size_t array_size, int data_position, bool print_value);
 
 /**
  * Asks "the user" for a menu option and then dispatches out to a handler that
@@ -116,7 +116,6 @@ int get_user_choice()
  */
 int process_user_choice(int user_choice, float data_array[], size_t array_size, int data_position)
 {
-    int i = 0;
     Processor processors[] = {/* 0 */ NULL, // There is no menu option 0...YET!!!
                               /* 1 */ &collect_data,
                               /* 2 */ &print_statistics};
@@ -151,7 +150,7 @@ int collect_data(float data_array[], size_t array_size, int data_position)
     }
 
     if (data_position == array_size)
-        printf("You are at your limit of %d numbers!\n", array_size);
+        printf("You are at your limit of %zd numbers!\n", array_size);
 
     return data_position;
 }
@@ -192,7 +191,7 @@ int print_statistics(float data_array[], size_t array_size, int data_position)
     for (i = 0; i < (sizeof calculators / sizeof(Calculator)); i++)
     {
         printf("%20s: ", calculators[i].calculation_name);
-        calculators[i].calculate(data_array, array_size, data_position);
+        calculators[i].calculate(data_array, array_size, data_position, true);
         printf("\n");
     }
 
@@ -222,9 +221,11 @@ void sort_array(float data_array[], size_t array_size, int data_position)
  *
  * NOTE: This expects a sorted array!
  */
-float calculate_high_number(float data_array[], size_t array_size, int data_position)
+float calculate_high_number(float data_array[], size_t array_size, int data_position, bool print_value)
 {
-    printf("%lf", data_array[data_position-1]);
+    if (print_value)
+        printf("%lf", data_array[data_position-1]);
+
     return data_array[data_position-1];
 }
 
@@ -233,9 +234,11 @@ float calculate_high_number(float data_array[], size_t array_size, int data_posi
  *
  * NOTE: This expects a sorted array!
  */
-float calculate_low_number(float data_array[], size_t array_size, int data_position)
+float calculate_low_number(float data_array[], size_t array_size, int data_position, bool print_value)
 {
-    printf("%lf", data_array[0]);
+    if (print_value)
+        printf("%lf", data_array[0]);
+
     return data_array[0];
 }
 
@@ -244,7 +247,7 @@ float calculate_low_number(float data_array[], size_t array_size, int data_posit
  *
  * NOTE: This expects a sorted array!
  */
-float calculate_mean(float data_array[], size_t array_size, int data_position)
+float calculate_mean(float data_array[], size_t array_size, int data_position, bool print_value)
 {
     int i = 0;
     float sum = 0.0, mean = 0.0;
@@ -252,7 +255,9 @@ float calculate_mean(float data_array[], size_t array_size, int data_position)
     for (i = 0; i < data_position; i++) sum += data_array[i];
     mean = sum / (data_position-1);
 
-    printf("%lf", mean);
+    if (print_value)
+        printf("%lf", mean);
+
     return mean;
 }
 
@@ -261,7 +266,7 @@ float calculate_mean(float data_array[], size_t array_size, int data_position)
  *
  * NOTE: This expects a sorted array!
  */
-float calculate_median(float data_array[], size_t array_size, int data_position)
+float calculate_median(float data_array[], size_t array_size, int data_position, bool print_value)
 {
     int middle_point = data_position / 2;
     float median = 0.0;
@@ -272,7 +277,9 @@ float calculate_median(float data_array[], size_t array_size, int data_position)
     else
         median = data_array[middle_point];
 
-    printf("%lf", median);
+    if (print_value)
+        printf("%lf", median);
+
     return median;
 }
 
@@ -281,9 +288,11 @@ float calculate_median(float data_array[], size_t array_size, int data_position)
  *
  * NOTE: This expects a sorted array!
  */
-float calculate_variance(float data_array[], size_t array_size, int data_position)
+float calculate_variance(float data_array[], size_t array_size, int data_position, bool print_value)
 {
-    float mean = calculate_mean(data_array, array_size, data_position), sum = 0.0, variance = 0.0;
+    float mean = calculate_mean(data_array, array_size, data_position, false),
+          sum = 0.0,
+          variance = 0.0;
     int i = 0;
 
     for (i = 0; i < data_position; i++)
@@ -291,7 +300,9 @@ float calculate_variance(float data_array[], size_t array_size, int data_positio
 
     variance = sum / (data_position-1);
 
-    printf("%lf", variance);
+    if (print_value)
+        printf("%lf", variance);
+
     return variance;
 }
 
@@ -300,7 +311,7 @@ float calculate_variance(float data_array[], size_t array_size, int data_positio
  *
  * NOTE: This expects a sorted array!
  */
-float calculate_mode(float data_array[], size_t array_size, int data_position)
+float calculate_mode(float data_array[], size_t array_size, int data_position, bool print_value)
 {
     int current_count = 0, i = 0;
     Mode_Object * mode_object_cursor = NULL,
@@ -377,11 +388,13 @@ Mode_Object * create_mode_node(float * number, int count, Mode_Object * mode_cur
  *
  * NOTE: This expects a sorted array!
  */
-float calculate_standard_deviation(float data_array[], size_t array_size, int data_position)
+float calculate_standard_deviation(float data_array[], size_t array_size, int data_position, bool print_value)
 {
-    float variance = calculate_variance(data_array, array_size, data_position),
+    float variance = calculate_variance(data_array, array_size, data_position, false),
           standard_deviation = pow(variance, 0.5);
 
-    printf("%lf", standard_deviation);
+    if (print_value)
+        printf("%lf", standard_deviation);
+
     return standard_deviation;
 }
