@@ -224,7 +224,7 @@ void sort_array(float data_array[], size_t array_size, int data_position)
 float calculate_high_number(float data_array[], size_t array_size, int data_position, bool print_value)
 {
     if (print_value)
-        printf("%lf", data_array[data_position-1]);
+        printf("%5.2lf", data_array[data_position-1]);
 
     return data_array[data_position-1];
 }
@@ -237,7 +237,7 @@ float calculate_high_number(float data_array[], size_t array_size, int data_posi
 float calculate_low_number(float data_array[], size_t array_size, int data_position, bool print_value)
 {
     if (print_value)
-        printf("%lf", data_array[0]);
+        printf("%5.2lf", data_array[0]);
 
     return data_array[0];
 }
@@ -256,7 +256,7 @@ float calculate_mean(float data_array[], size_t array_size, int data_position, b
     mean = sum / (data_position-1);
 
     if (print_value)
-        printf("%lf", mean);
+        printf("%5.2lf", mean);
 
     return mean;
 }
@@ -278,7 +278,7 @@ float calculate_median(float data_array[], size_t array_size, int data_position,
         median = data_array[middle_point];
 
     if (print_value)
-        printf("%lf", median);
+        printf("%5.2lf", median);
 
     return median;
 }
@@ -301,7 +301,7 @@ float calculate_variance(float data_array[], size_t array_size, int data_positio
     variance = sum / (data_position-1);
 
     if (print_value)
-        printf("%lf", variance);
+        printf("%5.2lf", variance);
 
     return variance;
 }
@@ -356,16 +356,27 @@ float calculate_mode(float data_array[], size_t array_size, int data_position, b
     // Print out the results. All that for just this.
     if (first_mode_object != NULL)
     {
+        i = 0;
+
         mode_object_cursor = first_mode_object;
         first_mode = *(mode_object_cursor->value);
 
         do
         {
-            printf("%lf (repeats %d times) ", mode_object_cursor->value[0],
-                                              mode_object_cursor->count);
+            if (i > 0) printf(", ");
+
+            if (i == 0)
+                printf("%5.2lf", mode_object_cursor->value[0]);
+
+            else if (i > 0)
+                printf("%3.2lf", mode_object_cursor->value[0]);
             mode_object_cursor = mode_object_cursor->next;
+
+            ++i;
         }
         while (mode_object_cursor != NULL && mode_object_cursor->count == first_mode_object->count);
+
+        printf(" (repeats %d times)", first_mode_object->count);
     }
     else
         printf("None");
@@ -394,7 +405,7 @@ float calculate_standard_deviation(float data_array[], size_t array_size, int da
           standard_deviation = pow(variance, 0.5);
 
     if (print_value)
-        printf("%lf", standard_deviation);
+        printf("%5.2lf", standard_deviation);
 
     return standard_deviation;
 }
