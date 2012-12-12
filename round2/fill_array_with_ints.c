@@ -32,5 +32,5 @@ void print_array_with_ints(int * array, size_t array_size)
     int * array_pointer = array;
 
     for (i = 0; i < array_size; i++)
-        printf("Item %d: %d\n", i, array_pointer[i]);
+        printf("Item %d: %d\n", i+1, array_pointer[i]);
 }
